@@ -1,0 +1,21 @@
+Breadth-First Search (BFS) Parallelization
+------------------------------------------
+THEORY:
+Breadth-First Search (BFS) is a graph traversal algorithm that explores all neighbor nodes at the present depth before moving to the next level. In a parallel implementation using OpenMP:
+1. The 'level-order' nature of BFS is maintained.
+2. The loop exploring neighbors of all nodes at the current level is parallelized using '#pragma omp parallel for'.
+3. Critical sections (#pragma omp critical) are used to ensure that the 'visited' array is updated safely and that nodes are added to the next level's queue without data races.
+
+DRY RUN:
+Input: 5 nodes, 4 edges, start node 1. Edges: (1,2), (1,3), (2,4), (3,5).
+1. Level 0: Queue = {1}. Visited = {1}.
+2. Process Level 0:
+   - Thread A picks node 1. Neighbors are 2 and 3.
+   - Thread A checks 2: Not visited -> Mark Visited, Add to next_level.
+   - Thread A checks 3: Not visited -> Mark Visited, Add to next_level.
+3. Level 1: Queue = {2, 3}.
+4. Process Level 1:
+   - Thread A picks node 2, checks neighbor 4: Not visited -> Mark Visited, Add to next_level.
+   - Thread B picks node 3, checks neighbor 5: Not visited -> Mark Visited, Add to next_level.
+5. Level 2: Queue = {4, 5}.
+6. Result: Nodes visited in order 1 -> 2, 3 -> 4, 5.

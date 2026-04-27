@@ -1,0 +1,18 @@
+Parallel Reduction Operations
+------------------------------
+THEORY:
+Reduction reduces an array of values into a single result (Min, Max, Sum, etc.). 
+1. In C++: '#pragma omp parallel for reduction(op:var)' creates private copies of 'var' for each thread. At the end, these private copies are combined using the operator.
+2. In Python: The array is split into chunks. Each chunk is processed by a separate process in a 'Pool', and the final results are aggregated.
+
+DRY RUN:
+Array: {5, 2, 9, 1, 7, 6, 8, 3, 4}
+1. Threads split the array:
+   - Thread 1: {5, 2, 9} -> Min: 2, Max: 9, Sum: 16
+   - Thread 2: {1, 7, 6} -> Min: 1, Max: 7, Sum: 14
+   - Thread 3: {8, 3, 4} -> Min: 3, Max: 8, Sum: 15
+2. Reduction Step:
+   - Min: min(2, 1, 3) = 1
+   - Max: max(9, 7, 8) = 9
+   - Sum: 16 + 14 + 15 = 45
+3. Final Average: 45 / 9 = 5.0

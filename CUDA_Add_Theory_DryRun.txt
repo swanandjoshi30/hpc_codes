@@ -1,0 +1,16 @@
+CUDA Vector Addition
+--------------------
+THEORY:
+Vector addition involves adding two arrays element-wise.
+1. The CPU (Host) allocates memory on the GPU (Device).
+2. Data is copied from Host to Device.
+3. A 'Kernel' is launched where thousands of GPU threads run the same code.
+4. Each thread uses its ID (tid) to access a specific index: C[tid] = A[tid] + B[tid].
+
+DRY RUN:
+N = 8. A = {0, 1, 2...7}, B = {0, 2, 4...14}
+1. GPU launches threads.
+2. Thread 0: C[0] = A[0] + B[0] = 0 + 0 = 0.
+3. Thread 4: C[4] = A[4] + B[4] = 4 + 8 = 12.
+4. Thread 7: C[7] = A[7] + B[7] = 7 + 14 = 21.
+5. Final Result: {0, 3, 6, 9, 12, 15, 18, 21}.

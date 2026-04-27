@@ -1,0 +1,17 @@
+Depth-First Search (DFS) Parallelization
+------------------------------------------
+THEORY:
+Depth-First Search (DFS) explores as far as possible along each branch before backtracking. Parallelizing DFS is more complex than BFS because of its sequential nature. In this implementation:
+1. When a node is visited, its neighbors are processed in parallel using '#pragma omp parallel for'.
+2. Each thread that finds an unvisited neighbor performs a recursive DFS call.
+3. A critical section ensures that only one thread marks a node as 'visited' and proceeds with the recursion, preventing redundant work.
+
+DRY RUN:
+Input: 5 nodes, 4 edges, start node 1. Edges: (1,2), (1,3), (2,4), (3,5).
+1. dfs(1) starts. Node 1 marked visited.
+2. Neighbors of 1 are {2, 3}.
+   - Thread A finds node 2: Not visited -> Mark Visited, call dfs(2).
+   - Thread B finds node 3: Not visited -> Mark Visited, call dfs(3).
+3. Inside dfs(2): Finds neighbor 4 -> Mark Visited, call dfs(4).
+4. Inside dfs(3): Finds neighbor 5 -> Mark Visited, call dfs(5).
+5. Result: Nodes visited in a path-first manner (e.g., 1, 2, 4, 3, 5).

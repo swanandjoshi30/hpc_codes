@@ -1,0 +1,18 @@
+Parallel Merge Sort (Task-Based)
+----------------------------------------
+THEORY:
+Merge Sort is a divide-and-conquer algorithm. Parallelism is achieved by:
+1. Recursively splitting the array into halves.
+2. Using '#pragma omp task' to assign the sorting of each half to a different thread.
+3. Using '#pragma omp taskwait' to ensure both halves are sorted before the 'merge' step begins.
+4. This allows the recursive tree to be processed by multiple processors simultaneously.
+
+DRY RUN:
+Array: {5, 2, 9, 1}
+1. Task 1 created to sort {5, 2, 9, 1}.
+2. Task 1 splits into:
+   - Task 2: Sort {5, 2}
+   - Task 3: Sort {9, 1}
+3. Task 2 splits into Task 4 {5} and Task 5 {2}. They return and merge to {2, 5}.
+4. Task 3 splits into Task 6 {9} and Task 7 {1}. They return and merge to {1, 9}.
+5. Task 1 waits for Task 2 and 3 to finish, then merges {2, 5} and {1, 9} into {1, 2, 5, 9}.

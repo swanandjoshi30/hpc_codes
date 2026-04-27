@@ -1,0 +1,15 @@
+CUDA Matrix Multiplication
+--------------------------
+THEORY:
+Matrix multiplication (C = A * B) involves dot products of rows and columns.
+1. The GPU uses a 2D grid of threads (x, y).
+2. Each thread (row, col) is responsible for calculating exactly one element of the result matrix.
+3. The thread loops through the corresponding row of A and column of B, summing the products.
+
+DRY RUN:
+4x4 Matrix. A (all 2s), B (all 3s).
+1. Thread (0,0) is launched.
+2. It calculates C[0][0] = (A[0][0]*B[0][0]) + (A[0][1]*B[1][0]) + (A[0][2]*B[2][0]) + (A[0][3]*B[3][0])
+3. C[0][0] = (2*3) + (2*3) + (2*3) + (2*3) = 6 + 6 + 6 + 6 = 24.
+4. Every thread calculates 24 for its respective position.
+5. Result: A 4x4 matrix filled with 24s.
